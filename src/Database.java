@@ -15,17 +15,22 @@ public class Database {
     static public void connectionDb() {
         connection = null;
         String host = "localhost";
-        String port = "3306";
+        String port = "5432";
         String db_name = "service";
-        String username = "root";
-        String password = "abc";
+        String username = "postgres";
+        String password = "qwe123";
         try {
-            Class.forName(
-                    "com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/service", "root", "abc");
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager.getConnection(
+                    "jdbc:postgresql://" + host + ":" + port + "/" + db_name,
+                    username,
+                    password
+            );
             if (connection != null) {
                 System.out.println("Connection OK");
-            } else System.out.println("Connection failed");
+            } else {
+                System.out.println("Connection failed");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -36,7 +41,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate
-                    ("INSERT INTO service.client (client_name,client_phone) VALUES ('" + client_name + "','" + client_phone + "');");
+                    ("INSERT INTO public.client (client_name,client_phone) VALUES ('" + client_name + "','" + client_phone + "');");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,12 +52,11 @@ public class Database {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate
-                    ("INSERT INTO service.car (car_name,car_brand) VALUES ('" + car_name + "','" + car_brand + "');");
+                    ("INSERT INTO public.car (car_name,car_brand) VALUES ('" + car_name + "','" + car_brand + "');");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
 
     static public void addSchedule(int id_mechanic, LocalDateTime from, LocalDateTime to) {
@@ -60,25 +64,55 @@ public class Database {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate
-                    ("INSERT INTO service.Schedule (id_mechanic,from,to) VALUES ('" + id_mechanic + "','" + from + "','" + to + "');");
+                    ("INSERT INTO public.Schedule (id_mechanic,from,to) VALUES ('" + id_mechanic + "','" + from + "','" + to + "');");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    static public void addAppointment(LocalDateTime data_created1, int mechanic_id,String mechanic_name,String car_model, String car_brand, String client_name, String client_phone, String service, Timestamp start_time, Timestamp end_time, String car_plate) {
+    static public void addAppointment(LocalDateTime data_created1, int mechanic_id, String mechanic_name, String car_model, String car_brand, String client_name, String client_phone, String service, Timestamp start_time, Timestamp end_time, String car_plate) {
         Statement stmt;
         try {
-            Timestamp data_created=Timestamp.valueOf(data_created1);
+            Timestamp data_created = Timestamp.valueOf(data_created1);
             //Timestamp start_time=Timestamp.valueOf(start_time1);
             //Timestamp end_time=Timestamp.valueOf(end_time1);
             stmt = connection.createStatement();
             stmt.executeUpdate
-                    ("INSERT INTO service.Appointment (date_created,mechanic_id,mechanic_name,car_model,car_brand,client_name,client_phone,service,start_time,end_time,car_plate) VALUES ('" + data_created + "','" + mechanic_id+ "','" + mechanic_name + "','" + car_model + "','" + car_brand + "','" + client_name + "','" + client_phone + "','" + service + "','" + start_time + "','" + end_time + "','" + car_plate + "');");
+                    ("INSERT INTO public.Appointment (date_created,mechanic_id,mechanic_name,car_model,car_brand,client_name,client_phone,service,start_time,end_time,car_plate) VALUES ('" + data_created + "','" + mechanic_id + "','" + mechanic_name + "','" + car_model + "','" + car_brand + "','" + client_name + "','" + client_phone + "','" + service + "','" + start_time + "','" + end_time + "','" + car_plate + "');");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    static public void updateAppointment(int appointment_id,  int mechanic_id, String mechanic_name) {
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "UPDATE public.appointment SET " +
+                    "mechanic_id = '" + mechanic_id + "', " +
+                    "mechanic_name = '" + mechanic_name + "' " +
+                    "WHERE id_appointment = " + appointment_id;
+            stmt.executeUpdate(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    static public void updateMechanic(int mechanic_id, String mechanic_name, String password) {
+        try {
+
+            Statement stmt = connection.createStatement();
+            String query = "UPDATE public.user SET " +
+                    "username = '" + mechanic_name + "', " +
+                    "password = '" + password +"' " +
+                    "WHERE id_user = " + mechanic_id;
+            stmt.executeUpdate(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
 
     static public void deleteUser(int user_id) {
@@ -86,7 +120,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate
-                    ("DELETE FROM service.user WHERE id_user='" + user_id + "');");
+                    ("DELETE FROM public.user WHERE id_user='" + user_id + "');");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,7 +131,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate
-                    ("DELETE FROM service.appointment WHERE id_Appointment='" + Appointment_id + "'");
+                    ("DELETE FROM public.appointment WHERE id_Appointment='" + Appointment_id + "'");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -107,7 +141,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate
-                    ("DELETE FROM service.car WHERE car_name='" + carname + "'");
+                    ("DELETE FROM public.car WHERE car_name='" + carname + "'");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,7 +151,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate
-                    ("DELETE FROM service.user WHERE id_user='" + id + "'");
+                    ("DELETE FROM public.user WHERE id_user='" + id + "'");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -130,7 +164,7 @@ public class Database {
             try {
                 stmt = connection.createStatement();
                 model = new DefaultTableModel();
-                ResultSet resultSet = stmt.executeQuery("SELECT * FROM appointment WHERE role=mechanic");
+                ResultSet resultSet = stmt.executeQuery("SELECT * FROM public.appointment WHERE role=mechanic");
                 ResultSetMetaData metaData = resultSet.getMetaData();
                 int columnCount = metaData.getColumnCount();
                 String[] columnNames = new String[columnCount];
@@ -157,7 +191,7 @@ public class Database {
         Statement stmt;
         try {
             stmt = connection.createStatement();
-                ResultSet resultSet = stmt.executeQuery("SELECT * FROM service.user WHERE username='" + username + "' AND password = '" + password + "'");
+                ResultSet resultSet = stmt.executeQuery("SELECT * FROM public.user WHERE username='" + username + "' AND password = '" + password + "'");
             if (resultSet.next()) {
                 user = new User();
                 user.setFirst_name(resultSet.getString("first_name"));
@@ -182,7 +216,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             model = new DefaultTableModel();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM appointment");
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM public.appointment");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             String[] columnNames = new String[columnCount];
@@ -209,7 +243,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             model = new DefaultTableModel();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM appointment WHERE client_name='"+name+"'");
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM public.appointment WHERE client_name='"+name+"'");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             String[] columnNames = new String[columnCount];
@@ -235,7 +269,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             model = new DefaultTableModel();
-            ResultSet resultSet = stmt.executeQuery("SELECT id_user,first_name,last_name FROM user WHERE role='mechanic' ");
+            ResultSet resultSet = stmt.executeQuery("SELECT id_user,first_name,last_name FROM public.user WHERE role='mechanic' ");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             String[] columnNames = new String[columnCount];
@@ -261,7 +295,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             model = new DefaultTableModel();
-            ResultSet resultSet = stmt.executeQuery("SELECT car_name,car_brand FROM car");
+            ResultSet resultSet = stmt.executeQuery("SELECT car_name,car_brand FROM public.car");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             String[] columnNames = new String[columnCount];
@@ -288,7 +322,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             model = new DefaultTableModel();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM appointment WHERE client_name='"+name+"' AND mechanic_id='"+id+"'");
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM public.appointment WHERE client_name='"+name+"' AND mechanic_id='"+id+"'");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             String[] columnNames = new String[columnCount];
@@ -314,7 +348,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             model = new DefaultTableModel();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM appointment WHERE client_phone='"+name+"'");
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM public.appointment WHERE client_phone='"+name+"'");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             String[] columnNames = new String[columnCount];
@@ -341,7 +375,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             model = new DefaultTableModel();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM appointment WHERE client_phone='"+name+"' AND mechanic_id='"+id+"'");
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM public.appointment WHERE client_phone='"+name+"' AND mechanic_id='"+id+"'");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             String[] columnNames = new String[columnCount];
@@ -368,7 +402,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             model = new DefaultTableModel();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM appointment WHERE car_plate='"+name+"'");
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM public.appointment WHERE car_plate='"+name+"'");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             String[] columnNames = new String[columnCount];
@@ -394,7 +428,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             model = new DefaultTableModel();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM appointment WHERE car_plate='"+name+"' AND mechanic_id='"+id+"'");
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM public.appointment WHERE car_plate='"+name+"' AND mechanic_id='"+id+"'");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             String[] columnNames = new String[columnCount];
@@ -420,7 +454,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             model = new DefaultTableModel();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM appointment WHERE start_time>='"+from+"' AND start_time<='"+to+"'");
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM public.appointment WHERE start_time>='"+from+"' AND start_time<='"+to+"'");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             String[] columnNames = new String[columnCount];
@@ -447,7 +481,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             model = new DefaultTableModel();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM appointment WHERE start_time>='"+from+"' AND start_time<='"+to+"' AND mechanic_id='"+id+"'");
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM public.appointment WHERE start_time>='"+from+"' AND start_time<='"+to+"' AND mechanic_id='"+id+"'");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             String[] columnNames = new String[columnCount];
@@ -473,7 +507,7 @@ public class Database {
         try {
             stmt = connection.createStatement();
             model = new DefaultTableModel();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM appointment where mechanic_id='"+mechanic_id+"'");
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM public.appointment where mechanic_id='"+mechanic_id+"'");
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             String[] columnNames = new String[columnCount];
@@ -498,7 +532,17 @@ public class Database {
         Statement stmt;
         try {
             stmt = connection.createStatement();
-            stmt.execute("INSERT INTO service.user (first_name, last_name, username, password,role) VALUES ('"+first_name+"','"+last_name+"','"+username+"','"+password+"' ,'mechanic');");
+            stmt.execute("INSERT INTO public.user (first_name, last_name, username, password,role) VALUES ('"+first_name+"','"+last_name+"','"+username+"','"+password+"' ,'mechanic');");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    static public void updateCar(String car_model,String car_brand) {
+        Statement stmt;
+        try {
+            stmt = connection.createStatement();
+            stmt.execute("UPDATE public.car SET car_brand = '" + car_brand + "' WHERE car_name = '" + car_model + "'");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -509,7 +553,7 @@ public class Database {
         Statement stmt;
         try{
             stmt= connection.createStatement();
-           ResultSet resultSet= stmt.executeQuery("SELECT id_user from service.user WHERE role = 'mechanic'");
+           ResultSet resultSet= stmt.executeQuery("SELECT id_user from public.user WHERE role = 'mechanic'");
             while (resultSet.next())
             {
             vector.add(resultSet.getInt("id_user"));
@@ -526,7 +570,7 @@ public class Database {
         Statement stmt;
         try{
             stmt= connection.createStatement();
-            ResultSet resultSet= stmt.executeQuery("SELECT car_brand from service.car ");
+            ResultSet resultSet= stmt.executeQuery("SELECT car_brand from public.car ");
             while (resultSet.next())
             {
                 vector.add(resultSet.getString("car_brand"));
@@ -542,7 +586,7 @@ public class Database {
         Statement stmt;
         try{
             stmt= connection.createStatement();
-            ResultSet resultSet= stmt.executeQuery("SELECT car_name from service.car WHERE car_brand = '"+brand+"'");
+            ResultSet resultSet= stmt.executeQuery("SELECT car_name from public.car WHERE car_brand = '"+brand+"'");
             while (resultSet.next())
             {
                 vector.add(resultSet.getString("car_name"));
@@ -559,12 +603,12 @@ public class Database {
         try{
 
             stmt= connection.createStatement();
-            ResultSet resultSet= stmt.executeQuery("SELECT first_name from service.user WHERE id_user= '"+id+"'");
+            ResultSet resultSet= stmt.executeQuery("SELECT first_name from public.user WHERE id_user= '"+id+"'");
             while(resultSet.next())
             {
             aux=resultSet.getString("first_name");
             }
-            resultSet=stmt.executeQuery("SELECT last_name from service.user WHERE id_user='"+id+"'");
+            resultSet=stmt.executeQuery("SELECT last_name from public.user WHERE id_user='"+id+"'");
             aux=aux+" ";
             while (resultSet.next())
             {

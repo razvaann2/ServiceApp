@@ -11,6 +11,7 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/mysql-connector-j-8.0.31.jar!/" />
+          <root url="jar://D:/pgjdbc/postgresql-42.6.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

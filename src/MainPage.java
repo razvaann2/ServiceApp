@@ -399,7 +399,65 @@ public class MainPage extends JDialog{
             ownerMenu.add(addAppointmentitem);
             OwnerTable();
 
-        }
+
+        JMenuItem updateCaritem = new JMenuItem("update car");
+        updateCaritem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DateFrom.setVisible(false);
+                DateTo.setVisible(false);
+                textClient.setVisible(false);
+                textClient1.setVisible(false);
+
+                Update_Car updatecarWindow= new Update_Car();
+
+                OwnerTable();
+                setVisible(true);
+
+            }
+        });
+        ownerMenu.add(updateCaritem);
+        OwnerTable();
+
+        JMenuItem updateAppointmentitem = new JMenuItem("update appointment");
+            updateAppointmentitem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    DateFrom.setVisible(false);
+                    DateTo.setVisible(false);
+                    textClient.setVisible(false);
+                    textClient1.setVisible(false);
+
+                    Update_Appointment updateAppointmentWindow= new Update_Appointment();
+
+                    OwnerTable();
+                    setVisible(true);
+
+                }
+            });
+            ownerMenu.add(updateAppointmentitem);
+            OwnerTable();
+
+            JMenuItem updateMechanicitem = new JMenuItem("update mechanic");
+            updateMechanicitem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    DateFrom.setVisible(false);
+                    DateTo.setVisible(false);
+                    textClient.setVisible(false);
+                    textClient1.setVisible(false);
+
+                    Update_Mechanic updateMechanicWindow= new Update_Mechanic();
+
+                    OwnerTable();
+                    setVisible(true);
+
+                }
+            });
+            ownerMenu.add(updateMechanicitem);
+            OwnerTable();
+
+    }
         if (user.getRole().equals("mechanic")) {
             JMenu mechanicMenu = new JMenu("Mechanic");
             menuBar.add(mechanicMenu);
